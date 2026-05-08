@@ -4,59 +4,59 @@ import 'package:specodec/specodec.dart';
 import '../emit_gen/specodec_all_types/all_types.dart';
 
 
-(int, int) testModel_deep_model(String vec, String out) {
+(int, int) testModel_opt_inner(String vec, String out) {
   int passed = 0, failed = 0;
-  final codec = DeepModelCodec;
+  final codec = OptInnerCodec;
   try {
-    final data = File('$vec/DeepModel.msgpack').readAsBytesSync();
+    final data = File('$vec/OptInner.msgpack').readAsBytesSync();
     final obj = codec.decode(MsgPackReader(data));
     final w = MsgPackWriter();
     codec.encode(w, obj);
-    File('$out/DeepModel.msgpack').writeAsBytesSync(w.toBytes());
+    File('$out/OptInner.msgpack').writeAsBytesSync(w.toBytes());
     passed++;
   } catch (e) {
-    print('FAIL DeepModel mp: $e');
+    print('FAIL OptInner mp: $e');
     failed++;
   }
   try {
-    final data = File('$vec/DeepModel.json').readAsBytesSync();
+    final data = File('$vec/OptInner.json').readAsBytesSync();
     final obj = codec.decode(JsonReader(data));
     final w = JsonWriter();
     codec.encode(w, obj);
-    File('$out/DeepModel.json').writeAsBytesSync(w.toBytes());
+    File('$out/OptInner.json').writeAsBytesSync(w.toBytes());
     passed++;
   } catch (e) {
-    print('FAIL DeepModel json: $e');
+    print('FAIL OptInner json: $e');
     failed++;
   }
   try {
-    final data = File('$vec/DeepModel.unformatted.json').readAsBytesSync();
+    final data = File('$vec/OptInner.unformatted.json').readAsBytesSync();
     final obj = codec.decode(JsonReader(data));
     final w = JsonWriter();
     codec.encode(w, obj);
-    File('$out/DeepModel.unformatted.json').writeAsBytesSync(w.toBytes());
+    File('$out/OptInner.unformatted.json').writeAsBytesSync(w.toBytes());
     passed++;
   } catch (e) {
-    print('FAIL DeepModel unformatted: $e');
+    print('FAIL OptInner unformatted: $e');
     failed++;
   }
   try {
-    final data = File('$vec/DeepModel.gron').readAsBytesSync();
+    final data = File('$vec/OptInner.gron').readAsBytesSync();
     final obj = codec.decode(GronReader(data));
     final w = GronWriter();
     codec.encode(w, obj);
-    File('$out/DeepModel.gron').writeAsBytesSync(w.toBytes());
+    File('$out/OptInner.gron').writeAsBytesSync(w.toBytes());
     passed++;
   } catch (e) {
-    print('FAIL DeepModel gron: $e');
+    print('FAIL OptInner gron: $e');
     failed++;
   }
   return (passed, failed);
 }
-(int, int) runNestedDeep(String vec, String out) {
+(int, int) runAllTypes(String vec, String out) {
   int passed = 0, failed = 0;
 
   // Object tests
-  final (pdeep_model, fdeep_model) = testModel_deep_model(vec, out); passed += pdeep_model; failed += fdeep_model;
+  final (popt_inner, fopt_inner) = testModel_opt_inner(vec, out); passed += popt_inner; failed += fopt_inner;
   return (passed, failed);
 }

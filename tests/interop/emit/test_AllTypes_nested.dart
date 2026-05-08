@@ -53,7 +53,7 @@ import '../emit_gen/specodec_all_types/all_types.dart';
   }
   return (passed, failed);
 }
-(int, int) runNested(String vec, String out) {
+(int, int) runAllTypesNested(String vec, String out) {
   int passed = 0, failed = 0;
 
   // Object tests

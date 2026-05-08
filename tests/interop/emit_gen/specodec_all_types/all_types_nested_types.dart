@@ -2,6 +2,7 @@ library specodec_all_types;
 
 import 'dart:typed_data';
 import 'package:specodec/specodec.dart';
+import 'all_types.dart';
 
 class NestedSimple {
   final String name;

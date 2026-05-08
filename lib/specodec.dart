@@ -1,3 +1,4 @@
+export 'src/spec_undefined.dart';
 export 'src/scodec_error.dart';
 export 'src/json_writer.dart';
 export 'src/json_reader.dart';

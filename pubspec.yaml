@@ -1,5 +1,13 @@
-name: specodec-runtime-dart
+name: specodec
 version: 0.0.1
 description: Specodec codec runtime for Dart
 environment:
   sdk: ">=3.0.0 <4.0.0"
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  windows:
+  web:

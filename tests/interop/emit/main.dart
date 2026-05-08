@@ -3,9 +3,24 @@ import 'dart:io' show File, Directory, Platform, exit;
 import 'package:specodec/specodec.dart';
 import '../emit_gen/specodec_all_types/all_types.dart';
 
+import 'test_scalars.dart';
+import 'test_AllTypes.dart';
+import 'test_AllTypes_Scalars.dart';
+import 'test_AllTypes_Opt.dart';
+import 'test_AllTypes_Pairs.dart';
+import 'test_AllTypes_Many.dart';
+import 'test_AllTypes_Arrays.dart';
+import 'test_AllTypes_Nests.dart';
+import 'test_AllTypes_Mixed.dart';
+import 'test_AllTypes_Recursive.dart';
+import 'test_AllTypes_Wide.dart';
+import 'test_AllTypes_Edge.dart';
+import 'test_AllTypes_Extra.dart';
+import 'test_AllTypes_nested.dart';
+import 'test_AllTypes_nested_deep.dart';
+import 'test_AllTypes_Enums.dart';
+import 'test_AllTypes_Unions.dart';
 import 'test_models.dart';
-import 'test_nested.dart';
-import 'test_nested_deep.dart';
 
 void main() {
   final vec = Platform.environment['VEC_DIR']!;
@@ -15,9 +30,24 @@ void main() {
 
   int passed = 0, failed = 0;
 
+  final (prunScalars, frunScalars) = runScalars(vec, out); passed += prunScalars; failed += frunScalars;
+  final (prunAllTypes, frunAllTypes) = runAllTypes(vec, out); passed += prunAllTypes; failed += frunAllTypes;
+  final (prunAllTypesScalars, frunAllTypesScalars) = runAllTypesScalars(vec, out); passed += prunAllTypesScalars; failed += frunAllTypesScalars;
+  final (prunAllTypesOpt, frunAllTypesOpt) = runAllTypesOpt(vec, out); passed += prunAllTypesOpt; failed += frunAllTypesOpt;
+  final (prunAllTypesPairs, frunAllTypesPairs) = runAllTypesPairs(vec, out); passed += prunAllTypesPairs; failed += frunAllTypesPairs;
+  final (prunAllTypesMany, frunAllTypesMany) = runAllTypesMany(vec, out); passed += prunAllTypesMany; failed += frunAllTypesMany;
+  final (prunAllTypesArrays, frunAllTypesArrays) = runAllTypesArrays(vec, out); passed += prunAllTypesArrays; failed += frunAllTypesArrays;
+  final (prunAllTypesNests, frunAllTypesNests) = runAllTypesNests(vec, out); passed += prunAllTypesNests; failed += frunAllTypesNests;
+  final (prunAllTypesMixed, frunAllTypesMixed) = runAllTypesMixed(vec, out); passed += prunAllTypesMixed; failed += frunAllTypesMixed;
+  final (prunAllTypesRecursive, frunAllTypesRecursive) = runAllTypesRecursive(vec, out); passed += prunAllTypesRecursive; failed += frunAllTypesRecursive;
+  final (prunAllTypesWide, frunAllTypesWide) = runAllTypesWide(vec, out); passed += prunAllTypesWide; failed += frunAllTypesWide;
+  final (prunAllTypesEdge, frunAllTypesEdge) = runAllTypesEdge(vec, out); passed += prunAllTypesEdge; failed += frunAllTypesEdge;
+  final (prunAllTypesExtra, frunAllTypesExtra) = runAllTypesExtra(vec, out); passed += prunAllTypesExtra; failed += frunAllTypesExtra;
+  final (prunAllTypesNested, frunAllTypesNested) = runAllTypesNested(vec, out); passed += prunAllTypesNested; failed += frunAllTypesNested;
+  final (prunAllTypesNestedDeep, frunAllTypesNestedDeep) = runAllTypesNestedDeep(vec, out); passed += prunAllTypesNestedDeep; failed += frunAllTypesNestedDeep;
+  final (prunAllTypesEnums, frunAllTypesEnums) = runAllTypesEnums(vec, out); passed += prunAllTypesEnums; failed += frunAllTypesEnums;
+  final (prunAllTypesUnions, frunAllTypesUnions) = runAllTypesUnions(vec, out); passed += prunAllTypesUnions; failed += frunAllTypesUnions;
   final (prunModels, frunModels) = runModels(vec, out); passed += prunModels; failed += frunModels;
-  final (prunNested, frunNested) = runNested(vec, out); passed += prunNested; failed += frunNested;
-  final (prunNestedDeep, frunNestedDeep) = runNestedDeep(vec, out); passed += prunNestedDeep; failed += frunNestedDeep;
 
   print('emit-dart: $passed passed, $failed failed');
   if (failed > 0) exit(1);

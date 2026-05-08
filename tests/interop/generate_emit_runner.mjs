@@ -8,9 +8,12 @@ const VEC_DIR = process.env.VEC_DIR || path.join(__dir, ".tests-cache", "vectors
 const manifestPath = path.join(VEC_DIR, "manifest.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
 
-const models = manifest.testModels;
+const models = [...(manifest.testModels || []), ...(manifest.testUnions || [])];
 const scalars = manifest.scalars;
 const modelNamespaces = manifest.modelNamespaces || {};
+const testUnions = new Set(manifest.testUnions || []);
+function isUnionTest(name) { return testUnions.has(name); }
+function unionNameOf(testName) { return testName.replace(/_[^_]+$/, ''); }
 
 function readMethod(type) {
   const map = {
@@ -63,10 +66,11 @@ function scalarCall(name) {
 
 function modelFunc(model) {
   const snake = toSnakeCase(model);
+  const codecName = isUnionTest(model) ? unionNameOf(model) : model;
   return `
 (int, int) testModel_${snake}(String vec, String out) {
   int passed = 0, failed = 0;
-  final codec = ${model}Codec;
+  final codec = ${codecName}Codec;
   try {
     final data = File('\$vec/${model}.msgpack').readAsBytesSync();
     final obj = codec.decode(MsgPackReader(data));
@@ -123,7 +127,7 @@ function modelCall(model) {
 // Group models by namespace
 const groups = {};
 for (const model of models) {
-  const ns = modelNamespaces[model] || [];
+  const nsStr = modelNamespaces[model] || ""; const ns = nsStr ? nsStr.split(".") : [];
   const key = ns.length > 0 ? ns.join("_") : "_root";
   if (!groups[key]) groups[key] = [];
   groups[key].push(model);
@@ -151,20 +155,33 @@ import '../emit_gen/specodec_all_types/all_types.dart';
 const groupKeys = Object.keys(groups);
 const groupInfo = [];
 
+// Scalar-only file
+if (Object.keys(scalars).length > 0) {
+  let scalarBody = preamble + "\n";
+  for (const [name, info] of Object.entries(scalars)) {
+    scalarBody += scalarFunc(name, info) + "\n";
+  }
+  scalarBody += `(int, int) runScalars(String vec, String out) {\n`;
+  scalarBody += `  int passed = 0, failed = 0;\n`;
+  scalarBody += `\n  // Scalar tests\n`;
+  for (const [name] of Object.entries(scalars)) {
+    scalarBody += scalarCall(name);
+  }
+  scalarBody += `  return (passed, failed);\n`;
+  scalarBody += `}\n`;
+  const scalarFile = "test_scalars.dart";
+  fs.writeFileSync(path.join(outDir, scalarFile), scalarBody);
+  groupInfo.push({ key: "_scalars", funcName: "runScalars", fileName: scalarFile });
+  console.log(`Generated emit/${scalarFile} with ${Object.keys(scalars).length} scalars`);
+}
+
 for (const key of groupKeys) {
   const funcName = nsFuncName(key);
   const fileName = nsFileName(key);
   groupInfo.push({ key, funcName, fileName });
   const mods = groups[key];
-  const isRoot = key === "_root";
 
   let body = preamble + "\n";
-
-  if (isRoot && Object.keys(scalars).length > 0) {
-    for (const [name, info] of Object.entries(scalars)) {
-      body += scalarFunc(name, info) + "\n";
-    }
-  }
 
   for (const model of mods) {
     body += modelFunc(model) + "\n";
@@ -172,13 +189,6 @@ for (const key of groupKeys) {
 
   body += `(int, int) ${funcName}(String vec, String out) {\n`;
   body += `  int passed = 0, failed = 0;\n`;
-
-  if (isRoot && Object.keys(scalars).length > 0) {
-    body += `\n  // Scalar tests\n`;
-    for (const [name] of Object.entries(scalars)) {
-      body += scalarCall(name);
-    }
-  }
 
   if (mods.length > 0) {
     body += `\n  // Object tests\n`;
@@ -192,7 +202,7 @@ for (const key of groupKeys) {
 
   const filePath = path.join(outDir, fileName);
   fs.writeFileSync(filePath, body);
-  console.log(`Generated emit/${fileName} with ${isRoot ? Object.keys(scalars).length + " scalars + " : ""}${mods.length} models`);
+  console.log(`Generated emit/${fileName} with ${mods.length} models`);
 }
 
 // Write main.dart
