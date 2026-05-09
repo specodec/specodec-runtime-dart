@@ -19,3 +19,4 @@ output/
 *.swo
 *~
 build/
+.npmrc
