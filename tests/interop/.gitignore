@@ -1,5 +1,5 @@
 .tests-cache/
-.emit-gen/
-output/
-output_emit_dart/
 node_modules/
+output/
+src/generated/
+emit_gen/

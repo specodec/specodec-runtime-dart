@@ -12,9 +12,11 @@ packages:
   specodec:
     dependency: "direct main"
     description:
-      path: "../../.."
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "961a1c0bd2a33577db312b335f3c785de48c34d2"
+      url: "http://10.199.64.20:3000/specodec/specodec-runtime-dart.git"
+    source: git
     version: "0.0.1"
 sdks:
   dart: ">=3.4.0 <4.0.0"

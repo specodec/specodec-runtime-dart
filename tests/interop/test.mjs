@@ -65,7 +65,9 @@ environment:
 
 dependencies:
   specodec:
-    path: ../../..
+    git:
+      url: http://10.199.64.20:3000/specodec/specodec-runtime-dart.git
+      ref: main
   path: ^1.8.0
 `;
 writeFileSync(join(__dir, 'emit', 'pubspec.yaml'), pubspec);

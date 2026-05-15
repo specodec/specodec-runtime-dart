@@ -1,5 +1,5 @@
 name: specodec
-version: 0.0.1
+version: 1.0.0
 description: Specodec codec runtime for Dart
 environment:
   sdk: ">=3.0.0 <4.0.0"
