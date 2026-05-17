@@ -62,7 +62,9 @@ String float32ToString(double f) {
     if (q <= 9) {
       if (mv % BigInt.from(5) == BigInt.zero) {
 vrIsTrailingZeros = multipleOfPowerOf5_32(mv, q);
+      } else if (acceptBounds) {
         vmIsTrailingZeros = multipleOfPowerOf5_32(mm, q);
+      } else {
         if (multipleOfPowerOf5_32(mp, q)) vp = vp - BigInt.one;
       }
     }
