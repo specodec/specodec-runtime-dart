@@ -47,7 +47,7 @@ String float64ToString(double d) {
   if (e2 >= 0) {
     int q = log10Pow2(e2);
     e10 = q;
-    int k = DOUBLE_POW5_INV_BITCOUNT + pow5bits(q) - 1;
+    int k = DOUBLE_POW5_INV_BITCOUNT + pow5Bits(q) - 1;
     int i = -e2 + q + k;
     
     vr = mulShift64(mv, DOUBLE_POW5_INV_SPLIT[q], i);
@@ -55,7 +55,7 @@ String float64ToString(double d) {
     vm_ = mulShift64(mm, DOUBLE_POW5_INV_SPLIT[q], i);
     
     if (q != 0 && (vp - BigInt.one) ~/ BigInt.from(10) <= vm_ ~/ BigInt.from(10)) {
-      int l = DOUBLE_POW5_INV_BITCOUNT + pow5bits(q - 1) - 1;
+      int l = DOUBLE_POW5_INV_BITCOUNT + pow5Bits(q - 1) - 1;
       lastDigit = mulShift64(mv, DOUBLE_POW5_INV_SPLIT[q - 1], -e2 + q - 1 + l) % BigInt.from(10);
     }
     
@@ -72,7 +72,7 @@ String float64ToString(double d) {
     int q = log10Pow5(-e2);
     e10 = q + e2;
     int i = -e2 - q;
-    int k = pow5bits(i) - DOUBLE_POW5_BITCOUNT;
+    int k = pow5Bits(i) - DOUBLE_POW5_BITCOUNT;
     int j = q - k;
     
     vr = mulShift64(mv, DOUBLE_POW5_SPLIT[i], j);
@@ -80,7 +80,7 @@ String float64ToString(double d) {
     vm_ = mulShift64(mm, DOUBLE_POW5_SPLIT[i], j);
     
     if (q != 0 && (vp - BigInt.one) ~/ BigInt.from(10) <= vm_ ~/ BigInt.from(10)) {
-      int j2 = q - 1 - (pow5bits(i + 1) - DOUBLE_POW5_BITCOUNT);
+      int j2 = q - 1 - (pow5Bits(i + 1) - DOUBLE_POW5_BITCOUNT);
       lastDigit = mulShift64(mv, DOUBLE_POW5_SPLIT[i + 1], j2) % BigInt.from(10);
     }
     

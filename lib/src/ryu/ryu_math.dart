@@ -1,4 +1,4 @@
-int pow5bits(int e) {
+int pow5Bits(int e) {
   return (e * 1217359) ~/ 524288 + 1;
 }
 

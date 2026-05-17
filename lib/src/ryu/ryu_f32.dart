@@ -47,7 +47,7 @@ String float32ToString(double f) {
   if (e2 >= 0) {
     int q = log10Pow2(e2);
     e10 = q;
-    int k = FLOAT_POW5_INV_BITCOUNT + pow5bits(q) - 1;
+    int k = FLOAT_POW5_INV_BITCOUNT + pow5Bits(q) - 1;
     int i = -e2 + q + k;
     
     vr = mulShift32(mv, FLOAT_POW5_INV_SPLIT[q] + BigInt.one, i);
@@ -55,7 +55,7 @@ String float32ToString(double f) {
     vm_ = mulShift32(mm, FLOAT_POW5_INV_SPLIT[q] + BigInt.one, i);
     
     if (q != 0 && (vp - BigInt.one) ~/ BigInt.from(10) <= vm_ ~/ BigInt.from(10)) {
-      int l = FLOAT_POW5_INV_BITCOUNT + pow5bits(q - 1) - 1;
+      int l = FLOAT_POW5_INV_BITCOUNT + pow5Bits(q - 1) - 1;
       lastDigit = mulShift32(mv, FLOAT_POW5_INV_SPLIT[q - 1] + BigInt.one, -e2 + q - 1 + l) % BigInt.from(10);
     }
     
@@ -72,7 +72,7 @@ vrIsTrailingZeros = multipleOfPowerOf5_32(mv, q);
     int q = log10Pow5(-e2);
     e10 = q + e2;
     int i = -e2 - q;
-    int k = pow5bits(i) - FLOAT_POW5_BITCOUNT;
+    int k = pow5Bits(i) - FLOAT_POW5_BITCOUNT;
     int j = q - k;
     
     vr = mulShift32(mv, FLOAT_POW5_SPLIT[i], j);
@@ -80,7 +80,7 @@ vrIsTrailingZeros = multipleOfPowerOf5_32(mv, q);
     vm_ = mulShift32(mm, FLOAT_POW5_SPLIT[i], j);
     
     if (q != 0 && (vp - BigInt.one) ~/ BigInt.from(10) <= vm_ ~/ BigInt.from(10)) {
-      int j2 = q - 1 - (pow5bits(i + 1) - FLOAT_POW5_BITCOUNT);
+      int j2 = q - 1 - (pow5Bits(i + 1) - FLOAT_POW5_BITCOUNT);
       lastDigit = mulShift32(mv, FLOAT_POW5_SPLIT[i + 1], j2) % BigInt.from(10);
     }
     
